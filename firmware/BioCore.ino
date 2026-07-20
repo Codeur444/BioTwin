@@ -33,7 +33,7 @@ void max30102Init()
 
     if (!sensor.begin(Wire, I2C_SPEED_FAST))
     {
-        Serial.println("MAX30102 introuvable");
+        error = "Max30102 introuvable";
         while (1);
     }
 
@@ -41,8 +41,6 @@ void max30102Init()
 
     sensor.setPulseAmplitudeRed(0x1F);
     sensor.setPulseAmplitudeIR(0x1F);
-
-    Serial.println("MAX30102 initialise.");
 }
 
 void readMax30102()
@@ -125,7 +123,7 @@ void sendData()
 
 void setup()
 {
-    Serial.begin(115200);
+    Serial.begin(9600);
 
     max30102Init();
 }

@@ -1,0 +1,9 @@
+/home/ezekia/BioCore/build/Desktop_Debug/CMakeFiles/BioCore.dir
+/home/ezekia/BioCore/build/Desktop_Debug/CMakeFiles/edit_cache.dir
+/home/ezekia/BioCore/build/Desktop_Debug/CMakeFiles/rebuild_cache.dir
+/home/ezekia/BioCore/build/Desktop_Debug/CMakeFiles/list_install_components.dir
+/home/ezekia/BioCore/build/Desktop_Debug/CMakeFiles/install.dir
+/home/ezekia/BioCore/build/Desktop_Debug/CMakeFiles/install/local.dir
+/home/ezekia/BioCore/build/Desktop_Debug/CMakeFiles/install/strip.dir
+/home/ezekia/BioCore/build/Desktop_Debug/CMakeFiles/BioCore_autogen_timestamp_deps.dir
+/home/ezekia/BioCore/build/Desktop_Debug/CMakeFiles/BioCore_autogen.dir

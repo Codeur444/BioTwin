@@ -1,0 +1,1 @@
+/bin/g++ -g -Wl,--dependency-file=CMakeFiles/BioCore.dir/link.d CMakeFiles/BioCore.dir/BioCore_autogen/mocs_compilation.cpp.o CMakeFiles/BioCore.dir/main.cpp.o CMakeFiles/BioCore.dir/BioCore.cpp.o -o BioCore  /usr/lib/libQt6Widgets.so.6.11.1 /usr/lib/libQt6SerialPort.so.6.11.1 /usr/lib/libQt6Gui.so.6.11.1 /usr/lib/libGLX.so /usr/lib/libOpenGL.so /usr/lib/libQt6Core.so.6.11.1
