@@ -11,10 +11,10 @@ MAX30105 sensor;
 
 byte rates[RATE_SIZE];
 byte rateIndex = 0;
-byte counter = 0;
 
 long lastBeat = 0;
 long irValue = 0;
+
 long lastRead = 0;
 long lastSend = 0;
 
@@ -39,15 +39,16 @@ void max30102Init()
 
     sensor.setup();
 
-    sensor.setPulseAmplitudeRed(0x1F);
-    sensor.setPulseAmplitudeIR(0x1F);
+    sensor.setPulseAmplitudeRed(0x0A);
+    sensor.setPulseAmplitudeIR(0x0A);
+    sensor.setPulseAmplitudeGreen(0);
 }
 
 void readMax30102()
 {
     irValue = sensor.getIR();
 
-    if (irValue < 50000)
+    if (irValue < 10000)
     {
         fingerDetected = false;
 
@@ -60,39 +61,33 @@ void readMax30102()
         return;
     }
 
-    fingerDetected = true;
+    beatDetected = checkForBeat(irValue);
 
     error = "";
     message = "";
 
-    beatDetected = checkForBeat(irValue);
+    fingerDetected = true;
 
     if (beatDetected)
     {
         long delta = millis() - lastBeat;
+
         lastBeat = millis();
+        
         beatsPerMinute = 60.0 / (delta / 1000.0);
+        
         if (beatsPerMinute > 20 && beatsPerMinute < 255)
         {
             rates[rateIndex++] = (byte)beatsPerMinute;
             rateIndex %= RATE_SIZE;
             beatMoy = 0;
 
-            if (counter < RATE_SIZE)
-            {
-                counter++;
-            }
-            else
-            {
-                counter = RATE_SIZE;
-            }
-
-            for (byte i = 0; i < counter; i++)
+            for (byte i = 0; i < RATE_SIZE; i++)
             {
                 beatMoy += rates[i];
             }
 
-            beatMoy /= counter;
+            beatMoy /= RATE_SIZE;
         }
         rgbLedWrite(LED_BUILTIN, 255, 0, 0);
     }
@@ -107,15 +102,15 @@ void sendData()
     JsonDocument data;
 
     data["device"] = "BioCore";
-    data["timestamp"] = millis();
-
+    data["time"] = millis();
+    data["beatDetected"] = beatDetected;
     data["fingerDetected"] = fingerDetected;
     data["message"] = message;
     data["error"] = error;
     data["irValue"] = irValue;
     data["bpm"] = beatsPerMinute;
     data["beatMoy"] = beatMoy;
-
+    
     serializeJson(data, Serial);
 
     Serial.println();
@@ -123,24 +118,13 @@ void sendData()
 
 void setup()
 {
-    Serial.begin(9600);
+    Serial.begin(115200);
 
     max30102Init();
 }
 
 void loop()
 {
-    long now = millis();
-
-    if (now - lastRead >= 10)
-    {
-        lastRead = now;
-        readMax30102();
-    }
-
-    if (now - lastSend >= 100)
-    {
-        lastSend = now;
-        sendData();
-    }
+    readMax30102();
+    sendData();
 }
