@@ -17,8 +17,10 @@ long irValue = 0;
 
 long lastRead = 0;
 long lastSend = 0;
+long lastTemp = 0;
 
 float beatsPerMinute = 0;
+float temperature, defaultTemperature;
 int beatMoy = 0;
 
 bool beatDetected = false;
@@ -26,6 +28,17 @@ bool fingerDetected = false;
 
 String message = "";
 String error = "";
+
+void temperatureInit()
+{
+    sensor.enableDIETEMPRDY();
+}
+
+void readTemperature()
+{
+    defaultTemperature = sensor.readTemperature();
+    temperature = 1.08 * defaultTemperature + 1.5;
+}
 
 void max30102Init()
 {
@@ -110,6 +123,7 @@ void sendData()
     data["irValue"] = irValue;
     data["bpm"] = beatsPerMinute;
     data["beatMoy"] = beatMoy;
+    data["temperature"] = temperature;
     
     serializeJson(data, Serial);
 
@@ -121,10 +135,17 @@ void setup()
     Serial.begin(115200);
 
     max30102Init();
+    temperatureInit();
 }
 
 void loop()
 {
     readMax30102();
+
+    if (millis() - lastTemp > 10000)
+    {
+        lastTemp = millis();
+        readTemperature();
+    }
     sendData();
 }
